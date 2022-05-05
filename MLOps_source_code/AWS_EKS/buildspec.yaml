@@ -1,0 +1,26 @@
+version: 0.2
+    
+phases:
+  install:
+    commands:
+      - echo Installing app dependencies...
+      - curl -o kubectl https://storage.googleapis.com/kubernetes-release/release/v1.23.0/bin/linux/amd64/kubectl   
+      - chmod +x ./kubectl
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+      - source ~/.bashrc
+  pre_build:
+    commands:
+      - echo Entered the pre_build phase...
+      - echo Logging in to Amazon EKS...
+      - aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $AWS_CLUSTER_NAME
+  build:
+    commands:
+      - echo Entered the build phase...
+      # - echo Change directory to secondary source
+      # - cd $CODEBUILD_SRC_DIR
+      - echo List directory
+      - ls -la
+      - echo Push the latest image to cluster
+      - kubectl apply -f deployment.yaml
+      - kubectl rollout restart deployment/banking-based-classification-deployment --namespace=banking-classification

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-based-classification-deployment
+  namespace: banking-classification
+  labels:
+    application: banking-based-classification
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      application: banking-based-classification
+  template:
+    metadata:
+      labels:
+        application: banking-based-classification
+    spec:
+      containers:
+      - name: banking-based-classification
+        image: 143176219551.dkr.ecr.us-east-1.amazonaws.com/banking-classification:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: '1'
+          limits:
+            memory: "1024Mi"
+            cpu: '2'
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health-status
+        #     port: 5000
+        #     scheme: HTTP
+      restartPolicy: Always

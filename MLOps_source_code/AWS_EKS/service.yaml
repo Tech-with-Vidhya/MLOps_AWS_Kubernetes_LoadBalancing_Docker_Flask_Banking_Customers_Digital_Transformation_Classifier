@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: banking-based-classification-svc
+  namespace: banking-classification
+  labels:
+    application: banking-based-classification
+    stage: development
+  # annotations:
+  #   service.beta.kubernetes.io/aws-load-balancer-security-groups: 
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  selector:
+    application: banking-based-classification
